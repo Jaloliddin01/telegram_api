@@ -11,19 +11,41 @@ def get_updates():
     r = requests.get(url_get)
     return json.loads(r.content)
 
-# sendMessage
-def send_message(chat_id, text):
-    url_send = url + 'sendMessage'
-    payload = {'chat_id': chat_id, 'text': text}
-    if text is not None:
-        requests.post(url_send, json=payload)
+# forwardMessage
+def forward_message(chat_id, from_chat_id, message_id):
+    url_forward = url + 'forwardMessage'
+    data = {'chat_id': chat_id, 'from_chat_id': from_chat_id, 'message_id': message_id, 'protect_content': True}
+    r = requests.post(url_forward, data=data)
+    return json.loads(r.content)
+    
 
 # echo
 def echo():
     data = get_updates()
     chat_id = data['result'][-1]['message']['chat']['id']
-    text = data['result'][-1]['message']['text']
-    send_message(chat_id, text)
+    from_chat_id = data['result'][-1]['message']['from']['id']
+    message_id = data['result'][-1]['message']['message_id']
+    # if data['result'][-1]['message']['text']:
+    #     ans = data['result'][-1]['message']['text']
+    # elif data['result'][-1]['message']['photo']:
+    #     ans = data['result'][-1]['message']['photo']
+    # elif data['result'][-1]['message']['video']:
+    #     ans = data['result'][-1]['message']['video']
+    # elif data['result'][-1]['message']['audio']:
+    #     ans = data['result'][-1]['message']['audio']
+    # elif data['result'][-1]['message']['document']:
+    #     ans = data['result'][-1]['message']['document']
+    # elif data['result'][-1]['message']['voice']:
+    #     ans = data['result'][-1]['message']['voice']
+    # elif data['result'][-1]['message']['sticker']:
+    #     ans = data['result'][-1]['message']['sticker']
+    # elif data['result'][-1]['message']['contact']:
+    #     ans = data['result'][-1]['message']['contact']
+    # elif data['result'][-1]['message']['location']:
+    #     ans = data['result'][-1]['message']['location']
+    # else:
+    #     ans = '' #nothing
+    forward_message(chat_id, from_chat_id, message_id)
 
 
 # main
